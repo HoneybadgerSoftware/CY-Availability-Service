@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_availability_table
+      author: jakub.kolacz
+      changes:
+        - createTable:
+            tableName: availability
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: price
+                  type: decimal(19,2)
+              - column:
+                  name: shop_id
+                  type: bigint
+        - createSequence:
+            sequenceName: availability_sequence
+            incrementBy: 100
+            startValue: 1
+            cacheSize: 100
+            cycle: true
