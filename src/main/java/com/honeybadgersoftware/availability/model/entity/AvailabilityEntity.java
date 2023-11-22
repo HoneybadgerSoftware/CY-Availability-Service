@@ -19,6 +19,9 @@ public class AvailabilityEntity {
     @SequenceGenerator(name = "availability_seq_gen", sequenceName = "availability_sequence", allocationSize = 100)
     private Long id;
 
+    @Column(name = "product_id")
+    private Long productId;
+
     @Column(name = "price")
     private BigDecimal price;
 
