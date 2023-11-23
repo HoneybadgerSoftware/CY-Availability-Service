@@ -3,14 +3,15 @@ package com.honeybadgersoftware.availability.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class UpdateAvailabilityData {
-
+@NoArgsConstructor
+public class ProductAveragePrice {
     private Long id;
-    private BigDecimal price;
+    private BigDecimal averagePrice;
 }
