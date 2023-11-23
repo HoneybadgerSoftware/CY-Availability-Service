@@ -18,7 +18,8 @@ public class AvailabilityController {
 
     @PutMapping("/update")
     ResponseEntity<Void> updateAvailability(@RequestBody UpdateAvailabilityRequest updateAvailabilityRequest) {
-        return null;
+        facade.synchronizeProductsAvailabilityData(updateAvailabilityRequest);
+        return ResponseEntity.ok().build();
     }
 
 }
