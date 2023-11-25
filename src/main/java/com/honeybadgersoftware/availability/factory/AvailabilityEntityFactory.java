@@ -11,7 +11,7 @@ public class AvailabilityEntityFactory implements ManyToOneFactory<UpdateAvailab
     @Override
     public AvailabilityEntity map(UpdateAvailabilityData updateAvailabilityData, Long shopId) {
         return AvailabilityEntity.builder()
-                .id(updateAvailabilityData.getId())
+                .productId(updateAvailabilityData.getProductId())
                 .price(updateAvailabilityData.getPrice())
                 .shopId(shopId)
                 .build();

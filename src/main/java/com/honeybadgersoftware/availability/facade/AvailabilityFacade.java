@@ -1,14 +1,15 @@
 package com.honeybadgersoftware.availability.facade;
 
-import com.honeybadgersoftware.availability.client.ProductServiceApi;
+
+import com.honeybadgersoftware.availability.api.product.client.ProductServiceApi;
 import com.honeybadgersoftware.availability.model.UpdateAvailabilityRequest;
 import com.honeybadgersoftware.availability.model.UpdateProductsAveragePriceRequest;
 import com.honeybadgersoftware.availability.service.AvailabilityService;
 import com.honeybadgersoftware.availability.service.PriceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class AvailabilityFacade {
 

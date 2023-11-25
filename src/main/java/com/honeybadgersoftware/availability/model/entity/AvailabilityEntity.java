@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "availability")
+@ToString
 public class AvailabilityEntity {
 
     @Id

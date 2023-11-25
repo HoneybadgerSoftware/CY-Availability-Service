@@ -4,7 +4,7 @@ databaseChangeLog:
       author: jakub.kolacz
       changes:
         - loadData:
-            tableName:
+            tableName: availability
             file: data/availability_table.csv
             separator: ','
             relativeToChangelogFile: true
