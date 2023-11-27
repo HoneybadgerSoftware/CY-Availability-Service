@@ -2,7 +2,7 @@ package com.honeybadgersoftware.availability.factory;
 
 import com.honeybadgersoftware.availability.model.UpdateAvailabilityData;
 import com.honeybadgersoftware.availability.model.entity.AvailabilityEntity;
-import com.honeybadgersoftware.availability.utils.ManyToOneFactory;
+import com.honeybadgersoftware.availability.utils.factory.ManyToOneFactory;
 import org.springframework.stereotype.Component;
 
 @Component

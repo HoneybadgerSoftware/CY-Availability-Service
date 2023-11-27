@@ -1,4 +1,4 @@
-package com.honeybadgersoftware.availability.utils;
+package com.honeybadgersoftware.availability.utils.factory;
 
 import java.util.List;
 import java.util.stream.Collectors;
