@@ -11,6 +11,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UpdateAvailabilityData {
 
-    private Long id;
+    private Long productId;
     private BigDecimal price;
 }
