@@ -1,9 +1,8 @@
 package com.honeybadgersoftware.availability.service.impl;
 
-import com.honeybadgersoftware.availability.decorator.AvailabilityEntityDecorator;
-import com.honeybadgersoftware.availability.factory.AvailabilityEntityFactory;
-import com.honeybadgersoftware.availability.model.UpdateAvailabilityData;
-import com.honeybadgersoftware.availability.model.UpdateAvailabilityRequest;
+import com.honeybadgersoftware.availability.component.decorator.AvailabilityEntityDecorator;
+import com.honeybadgersoftware.availability.model.dto.ProductPriceData;
+import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
 import com.honeybadgersoftware.availability.model.entity.AvailabilityEntity;
 import com.honeybadgersoftware.availability.repository.AvailabilityRepository;
 import com.honeybadgersoftware.availability.service.AvailabilityService;
@@ -16,17 +15,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AvailabilityServiceImpl implements AvailabilityService {
+public class UpdateAvailabilityServiceImpl implements AvailabilityService {
 
     private final AvailabilityRepository availabilityRepository;
-    private final AvailabilityEntityFactory availabilityEntityFactory;
     private final AvailabilityEntityDecorator availabilityEntityDecorator;
 
     @Override
     public List<Long> updateAvailability(UpdateAvailabilityRequest updateAvailabilityRequest) {
 
-        List<UpdateAvailabilityData> newProductsData = updateAvailabilityRequest.getNewProductsData();
-        List<UpdateAvailabilityData> existingProductsData = updateAvailabilityRequest.getExistingProductsData();
+        List<ProductPriceData> newProductsData = updateAvailabilityRequest.getNewProductsData();
+        List<ProductPriceData> existingProductsData = updateAvailabilityRequest.getExistingProductsData();
         Long shopId = updateAvailabilityRequest.getShopId();
 
         if (newProductsData.isEmpty()) {
@@ -36,21 +34,19 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         return updateAvailabilityDataForExistingProducts(existingProductsData, shopId);
     }
 
-    private List<Long> updateAvailabilityDataForExistingProducts(List<UpdateAvailabilityData> data, Long shopId) {
+    private List<Long> updateAvailabilityDataForExistingProducts(List<ProductPriceData> data, Long shopId) {
         return updateAvailabilityDatabase(data, shopId).stream()
                 .map(AvailabilityEntity::getProductId).collect(Collectors.toList());
     }
 
-    private List<AvailabilityEntity> updateAvailabilityDatabase(List<UpdateAvailabilityData> updateAvailabilityData, Long shopId) {
+    private List<AvailabilityEntity> updateAvailabilityDatabase(List<ProductPriceData> productPriceData, Long shopId) {
 
         List<AvailabilityEntity> existingEntities = availabilityRepository.findAllByProductIdAndShopId(
-                updateAvailabilityData.stream().map(UpdateAvailabilityData::getProductId).toList(),
+                productPriceData.stream().map(ProductPriceData::getProductId).toList(),
                 shopId);
 
-        System.out.println("Dupa " + existingEntities.toString());
-
         List<AvailabilityEntity> updatedEntities = existingEntities.stream()
-                .peek(existingEntity -> updateAvailabilityData.stream()
+                .peek(existingEntity -> productPriceData.stream()
                         .filter(updateData -> matchEntityWithAvailabilityData.test(updateData, existingEntity))
                         .findFirst().ifPresent(
                                 correspondingUpdateData ->
@@ -62,7 +58,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         return availabilityRepository.saveAll(updatedEntities);
     }
 
-    private final BiPredicate<UpdateAvailabilityData, AvailabilityEntity> matchEntityWithAvailabilityData =
+    private final BiPredicate<ProductPriceData, AvailabilityEntity> matchEntityWithAvailabilityData =
             (e1, e2) -> (e2.getProductId().equals(e1.getProductId()));
 
 

@@ -1,7 +1,7 @@
-package com.honeybadgersoftware.availability.decorator;
+package com.honeybadgersoftware.availability.component.decorator;
 
 import com.honeybadgersoftware.availability.model.entity.AvailabilityEntity;
-import com.honeybadgersoftware.availability.utils.GenericDecorator;
+import com.honeybadgersoftware.availability.utils.decorator.GenericDecorator;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

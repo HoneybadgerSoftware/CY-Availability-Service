@@ -1,6 +1,6 @@
 package com.honeybadgersoftware.availability.service;
 
-import com.honeybadgersoftware.availability.model.UpdateAvailabilityRequest;
+import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.honeybadgersoftware.availability.model;
+package com.honeybadgersoftware.availability.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,8 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductAveragePrice {
-    private Long id;
-    private BigDecimal averagePrice;
+public class ProductPriceData {
+
+    private Long productId;
+    private BigDecimal price;
 }

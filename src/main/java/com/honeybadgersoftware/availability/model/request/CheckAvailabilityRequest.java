@@ -1,4 +1,4 @@
-package com.honeybadgersoftware.availability.model;
+package com.honeybadgersoftware.availability.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateProductsAveragePriceRequest {
+public class CheckAvailabilityRequest {
 
-    private List<ProductAveragePrice> data;
+    private List<Long> productIds;
+    private List<Long> ShopIds;
+
 }

@@ -2,20 +2,20 @@ package com.honeybadgersoftware.availability.controller
 
 import com.honeybadgersoftware.availability.base.BaseIntegrationTest
 import com.honeybadgersoftware.availability.data.ProductDataCreator
-import com.honeybadgersoftware.availability.model.UpdateAvailabilityData
-import com.honeybadgersoftware.availability.model.UpdateAvailabilityRequest
+import com.honeybadgersoftware.availability.model.dto.ProductAvailabilityPerShopData
+import com.honeybadgersoftware.availability.model.dto.ProductPriceData
+import com.honeybadgersoftware.availability.model.request.CheckAvailabilityRequest
+import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest
+import com.honeybadgersoftware.availability.model.response.ProductAvailabilityResponse
 import com.honeybadgersoftware.availability.repository.AvailabilityRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
+import org.springframework.http.*
+
+import java.math.RoundingMode
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
-class AvailabilityControllerITest extends BaseIntegrationTest{
+class AvailabilityControllerITest extends BaseIntegrationTest {
 
     @Autowired
     AvailabilityRepository availabilityRepository
@@ -35,8 +35,8 @@ class AvailabilityControllerITest extends BaseIntegrationTest{
 
         def productsBeforeUpdate = availabilityRepository.findAllByProductIds([1L, 2L])
 
-        UpdateAvailabilityData existingProductData = new UpdateAvailabilityData(1L, new BigDecimal("19.99"))
-        UpdateAvailabilityData newProductData = new UpdateAvailabilityData(2L, new BigDecimal("29.99"))
+        ProductPriceData existingProductData = new ProductPriceData(1L, new BigDecimal("19.99"))
+        ProductPriceData newProductData = new ProductPriceData(2L, new BigDecimal("29.99"))
         UpdateAvailabilityRequest request = new UpdateAvailabilityRequest(shopId, [existingProductData], [newProductData])
 
         HttpHeaders headers = new HttpHeaders()
@@ -60,5 +60,87 @@ class AvailabilityControllerITest extends BaseIntegrationTest{
 
         println(productsBeforeUpdate)
         println(productsAfterUpdate)
+    }
+
+    def "getProductsAvailability returns correct data"() {
+        given:
+        CheckAvailabilityRequest checkAvailabilityRequest = new CheckAvailabilityRequest(productsIds, shopId)
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        HttpEntity<CheckAvailabilityRequest> requestEntity = new HttpEntity<>(checkAvailabilityRequest, headers)
+
+        when:
+        ResponseEntity<ProductAvailabilityResponse> response = restTemplate.exchange(
+                addressToUseForTests + "/availability/check",
+                HttpMethod.GET,
+                requestEntity,
+                ProductAvailabilityResponse.class)
+
+        then:
+        response.getStatusCode() == HttpStatus.OK
+
+        and: "Verify the response body"
+        println(response)
+
+        with(response.body.data.get(0)) {
+            with(it) {
+                def expectedResponseData = expectedResponse.getData().get(0)
+                getShopId() == expectedResponseData.getShopId()
+                totalPriceOfProducts == expectedResponseData.totalPriceOfProducts
+                productsPrices == expectedResponseData.productsPrices
+                missingProducts == expectedResponseData.missingProducts
+            }
+        }
+        with(response.body.data.get(1)) {
+            with(it) {
+                def expectedResponseData = expectedResponse.getData().get(1)
+                getShopId() == expectedResponseData.getShopId()
+                totalPriceOfProducts == expectedResponseData.totalPriceOfProducts
+                productsPrices == expectedResponseData.productsPrices
+                missingProducts == expectedResponseData.missingProducts
+            }
+        }
+
+        where:
+        shopId   | productsIds | expectedResponse
+        []       | [1L, 5L]    | partOfAvailabilityResponseCreatorForEmptyShopListWhenCantCompleteAnyList()
+        [1L, 2L] | [1L, 7L]    | availabilityResponseWithSpecifiedShops()
+
+
+    }
+    //bład wali ci dlatego że sam sie przed tym zabezpieczyłeś żeby nie iterować całej db, musisz wymyślić
+    // obejście jeśli chcesz zwrócić z kilku sklepów niepełne listy (możesz na fasadzie zrobić walidacje i walnąć exception
+    //z lista ID ktorych nie ma w innych sklepach
+
+    static def partOfAvailabilityResponseCreatorForEmptyShopListWhenCantCompleteAnyList() {
+        return new ProductAvailabilityResponse(List.of(
+                ProductAvailabilityPerShopData.builder()
+                        .shopId(1L)
+                        .totalPriceOfProducts(BigDecimal.valueOf(49.99).setScale(2, RoundingMode.HALF_UP))
+                        .productsPrices(List.of(new ProductPriceData(1L, 49.99)))
+                        .missingProducts(List.of(5L))
+                        .build(),
+                ProductAvailabilityPerShopData.builder()
+                        .shopId(2L)
+                        .totalPriceOfProducts(BigDecimal.valueOf(29.99).setScale(2, RoundingMode.HALF_UP))
+                        .productsPrices(List.of(new ProductPriceData(1L, 29.99)))
+                        .missingProducts(List.of(5L))
+                        .build()))
+    }
+
+    static def availabilityResponseWithSpecifiedShops() {
+        return new ProductAvailabilityResponse(List.of(
+                ProductAvailabilityPerShopData.builder()
+                        .shopId(1L)
+                        .totalPriceOfProducts(BigDecimal.valueOf(64.98).setScale(2, RoundingMode.HALF_UP))
+                        .productsPrices(List.of(new ProductPriceData(1L, 49.99), new ProductPriceData(7L, 14.99)))
+                        .missingProducts(Collections.emptyList())
+                        .build(),
+                ProductAvailabilityPerShopData.builder()
+                        .shopId(2L)
+                        .totalPriceOfProducts(BigDecimal.valueOf(64.98).setScale(2, RoundingMode.HALF_UP))
+                        .productsPrices(List.of(new ProductPriceData(1L, 29.99), new ProductPriceData(7L, 34.99)))
+                        .missingProducts(Collections.emptyList())
+                        .build()))
     }
 }

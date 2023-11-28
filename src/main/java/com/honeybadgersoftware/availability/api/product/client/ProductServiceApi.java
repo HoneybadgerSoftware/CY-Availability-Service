@@ -1,6 +1,6 @@
 package com.honeybadgersoftware.availability.api.product.client;
 
-import com.honeybadgersoftware.availability.model.UpdateProductsAveragePriceRequest;
+import com.honeybadgersoftware.availability.model.request.UpdateProductsAveragePriceRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;

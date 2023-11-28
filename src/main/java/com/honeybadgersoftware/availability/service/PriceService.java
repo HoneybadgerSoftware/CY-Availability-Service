@@ -1,10 +1,11 @@
 package com.honeybadgersoftware.availability.service;
 
-import com.honeybadgersoftware.availability.model.ProductAveragePrice;
+import com.honeybadgersoftware.availability.model.dto.ProductAveragePriceData;
 
 import java.util.List;
 
 public interface PriceService {
 
-    List<ProductAveragePrice> prepareProductsAveragePriceData(List<Long> productIds);
+    List<ProductAveragePriceData> prepareProductsAveragePriceData(List<Long> productIds);
+
 }
