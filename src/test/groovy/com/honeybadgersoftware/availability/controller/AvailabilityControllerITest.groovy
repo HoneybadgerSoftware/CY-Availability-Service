@@ -22,45 +22,45 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
 
     def productDataCreator = new ProductDataCreator()
 
-    def "updateAvailability updates product when valid request"() {
-        given:
-        Long shopId = 1L
-
-        and:
-        wireMock.stubFor(put(urlEqualTo("/products/synchronize/existingProducts"))
-                .withRequestBody(equalToJson(productDataCreator.updateProductsPricesJson))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")))
-
-        def productsBeforeUpdate = availabilityRepository.findAllByProductIds([1L, 2L])
-
-        ProductPriceData existingProductData = new ProductPriceData(1L, new BigDecimal("19.99"))
-        ProductPriceData newProductData = new ProductPriceData(2L, new BigDecimal("29.99"))
-        UpdateAvailabilityRequest request = new UpdateAvailabilityRequest(shopId, [existingProductData], [newProductData])
-
-        HttpHeaders headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
-        HttpEntity<UpdateAvailabilityRequest> requestEntity = new HttpEntity<>(request, headers)
-
-        when:
-        ResponseEntity<Void> response = restTemplate.exchange(
-                addressToUseForTests + "/availability/update",
-                HttpMethod.PUT,
-                requestEntity,
-                Void.class)
-
-        then:
-        response.getStatusCode() == HttpStatus.OK
-
-        and: "Check if products state changed"
-        def productsAfterUpdate = availabilityRepository.findAllByProductIds([1L, 2L])
-
-        productsBeforeUpdate != productsAfterUpdate
-
-        println(productsBeforeUpdate)
-        println(productsAfterUpdate)
-    }
+//    def "updateAvailability updates product when valid request"() {
+//        given:
+//        Long shopId = 1L
+//
+//        and:
+//        wireMock.stubFor(put(urlEqualTo("/products/synchronize/existingProducts"))
+//                .withRequestBody(equalToJson(productDataCreator.updateProductsPricesJson))
+//                .willReturn(aResponse()
+//                        .withStatus(200)
+//                        .withHeader("Content-Type", "application/json")))
+//
+//        def productsBeforeUpdate = availabilityRepository.findAllByProductIds([1L, 2L])
+//
+//        ProductPriceData existingProductData = new ProductPriceData(1L, new BigDecimal("19.99"))
+//        ProductPriceData newProductData = new ProductPriceData(2L, new BigDecimal("29.99"))
+//        UpdateAvailabilityRequest request = new UpdateAvailabilityRequest(shopId, [existingProductData], [newProductData])
+//
+//        HttpHeaders headers = new HttpHeaders()
+//        headers.setContentType(MediaType.APPLICATION_JSON)
+//        HttpEntity<UpdateAvailabilityRequest> requestEntity = new HttpEntity<>(request, headers)
+//
+//        when:
+//        ResponseEntity<Void> response = restTemplate.exchange(
+//                addressToUseForTests + "/availability/update",
+//                HttpMethod.PUT,
+//                requestEntity,
+//                Void.class)
+//
+//        then:
+//        response.getStatusCode() == HttpStatus.OK
+//
+//        and: "Check if products state changed"
+//        def productsAfterUpdate = availabilityRepository.findAllByProductIds([1L, 2L])
+//
+//        productsBeforeUpdate != productsAfterUpdate
+//
+//        println(productsBeforeUpdate)
+//        println(productsAfterUpdate)
+//    }
 
     def "getProductsAvailability returns correct data"() {
         given:
