@@ -87,7 +87,7 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
 
 //        assert responseDataList.size() >= 3 : "Oczekiwano co najmniej 3 elementów w odpowiedzi"
 
-        responseDataList[0..2].eachWithIndex { responseData, index ->
+        responseDataList.eachWithIndex { responseData, index ->
             if (index < expectedDataList.size()) {
                 with(responseData) {
                     def expectedResponseData = expectedDataList.get(index)
