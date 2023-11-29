@@ -2,4 +2,5 @@ databaseChangeLog:
   - includeAll:
       path: db/changelog/changeset/
   - includeAll:
-      path: db/changelog/inserts/
+      path: inserts/
+      relativeToChangelogFile: true

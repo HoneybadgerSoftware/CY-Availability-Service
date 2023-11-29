@@ -1,13 +1,12 @@
 package com.honeybadgersoftware.availability.controller;
 
 import com.honeybadgersoftware.availability.facade.AvailabilityFacade;
-import com.honeybadgersoftware.availability.model.UpdateAvailabilityRequest;
+import com.honeybadgersoftware.availability.model.request.CheckAvailabilityRequest;
+import com.honeybadgersoftware.availability.model.response.ProductAvailabilityResponse;
+import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/availability")
@@ -20,6 +19,11 @@ public class AvailabilityController {
     ResponseEntity<Void> updateAvailability(@RequestBody UpdateAvailabilityRequest updateAvailabilityRequest) {
         facade.synchronizeProductsAvailabilityData(updateAvailabilityRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/check")
+    ResponseEntity<ProductAvailabilityResponse> getProductsAvailability(@RequestBody CheckAvailabilityRequest checkAvailabilityRequest) {
+        return ResponseEntity.ok(facade.getProductsAvailability(checkAvailabilityRequest));
     }
 
 }

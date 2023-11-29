@@ -15,4 +15,13 @@ public interface AvailabilityRepository extends JpaRepository<AvailabilityEntity
     @Query("SELECT a FROM AvailabilityEntity a WHERE a.productId IN :productIds")
     List<AvailabilityEntity> findAllByProductIds(@Param("productIds") Collection<Long> productIds);
 
+    @Query("SELECT a FROM AvailabilityEntity a WHERE a.productId IN :productIds AND a.shopId = :shopId")
+    List<AvailabilityEntity> findAllByProductIdAndShopId(
+            @Param("productIds") Collection<Long> productIds, @Param("shopId") Long shopId);
+
+
+    @Query("SELECT a FROM AvailabilityEntity a WHERE (a.productId IN :productIds AND a.shopId IN :shopIds)")
+    List<AvailabilityEntity> findAllByProductIdsAndShopIds(
+            @Param("productIds") Collection<Long> productIds, @Param("shopIds") Collection<Long> shopIds);
+
 }

@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: load-availability_table
+      author: jakub.kolacz
+      changes:
+        - loadData:
+            tableName: availability
+            file: data/availability_table.csv
+            separator: ','
+            relativeToChangelogFile: true
