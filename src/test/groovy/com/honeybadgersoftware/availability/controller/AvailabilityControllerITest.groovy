@@ -22,45 +22,45 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
 
     def productDataCreator = new ProductDataCreator()
 
-//    def "updateAvailability updates product when valid request"() {
-//        given:
-//        Long shopId = 1L
-//
-//        and:
-//        wireMock.stubFor(put(urlEqualTo("/products/synchronize/existingProducts"))
-//                .withRequestBody(equalToJson(productDataCreator.updateProductsPricesJson))
-//                .willReturn(aResponse()
-//                        .withStatus(200)
-//                        .withHeader("Content-Type", "application/json")))
-//
-//        def productsBeforeUpdate = availabilityRepository.findAllByProductIds([1L, 2L])
-//
-//        ProductPriceData existingProductData = new ProductPriceData(1L, new BigDecimal("19.99"))
-//        ProductPriceData newProductData = new ProductPriceData(2L, new BigDecimal("29.99"))
-//        UpdateAvailabilityRequest request = new UpdateAvailabilityRequest(shopId, [existingProductData], [newProductData])
-//
-//        HttpHeaders headers = new HttpHeaders()
-//        headers.setContentType(MediaType.APPLICATION_JSON)
-//        HttpEntity<UpdateAvailabilityRequest> requestEntity = new HttpEntity<>(request, headers)
-//
-//        when:
-//        ResponseEntity<Void> response = restTemplate.exchange(
-//                addressToUseForTests + "/availability/update",
-//                HttpMethod.PUT,
-//                requestEntity,
-//                Void.class)
-//
-//        then:
-//        response.getStatusCode() == HttpStatus.OK
-//
-//        and: "Check if products state changed"
-//        def productsAfterUpdate = availabilityRepository.findAllByProductIds([1L, 2L])
-//
-//        productsBeforeUpdate != productsAfterUpdate
-//
-//        println(productsBeforeUpdate)
-//        println(productsAfterUpdate)
-//    }
+    def "updateAvailability updates product when valid request"() {
+        given:
+        Long shopId = 1L
+
+        and:
+        wireMock.stubFor(put(urlEqualTo("/products/synchronize/existingProducts"))
+                .withRequestBody(equalToJson(productDataCreator.updateProductsPricesJson))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")))
+
+        def productsBeforeUpdate = availabilityRepository.findAllByProductIds([9L, 2L])
+
+        ProductPriceData existingProductData = new ProductPriceData(9L, new BigDecimal("19.99"))
+        ProductPriceData newProductData = new ProductPriceData(2L, new BigDecimal("29.99"))
+        UpdateAvailabilityRequest request = new UpdateAvailabilityRequest(shopId, [existingProductData], [newProductData])
+
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        HttpEntity<UpdateAvailabilityRequest> requestEntity = new HttpEntity<>(request, headers)
+
+        when:
+        ResponseEntity<Void> response = restTemplate.exchange(
+                addressToUseForTests + "/availability/update",
+                HttpMethod.PUT,
+                requestEntity,
+                Void.class)
+
+        then:
+        response.getStatusCode() == HttpStatus.OK
+
+        and: "Check if products state changed"
+        def productsAfterUpdate = availabilityRepository.findAllByProductIds([9L, 2L])
+
+        productsBeforeUpdate != productsAfterUpdate
+
+        println(productsBeforeUpdate)
+        println(productsAfterUpdate)
+    }
 
     def "getProductsAvailability returns correct data"() {
         given:
@@ -85,8 +85,9 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
         def responseDataList = response.body.data
         def expectedDataList = expectedResponse.getData()
 
-//        assert responseDataList.size() >= 3 : "Oczekiwano co najmniej 3 elementów w odpowiedzi"
-
+        //I know iterating over response in test isnt the best practice, everything should be printed
+        //but with my low pc (that i have been working on this service)
+        //it is quite optimal(I do not have to write 2 separate tests), and also with this approach I can show some skills
         responseDataList.eachWithIndex { responseData, index ->
             if (index < expectedDataList.size()) {
                 with(responseData) {
@@ -107,9 +108,6 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
 
 
     }
-    //bład wali ci dlatego że sam sie przed tym zabezpieczyłeś żeby nie iterować całej db, musisz wymyślić
-    // obejście jeśli chcesz zwrócić z kilku sklepów niepełne listy (możesz na fasadzie zrobić walidacje i walnąć exception
-    //z lista ID ktorych nie ma w innych sklepach
 
     static def partOfAvailabilityResponseCreatorForEmptyShopListWhenCantCompleteAnyList() {
         return new ProductAvailabilityResponse(List.of(
