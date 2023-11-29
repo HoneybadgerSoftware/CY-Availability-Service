@@ -76,11 +76,11 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-sonarqube {
+sonar {
 	properties {
 		property "sonar.projectKey", "CY-Availability-Service"
-		property "sonar.organization", "Honeybadgersoftware"
+		property "sonar.organization", "honeybadgersoftware"
 		property "sonar.host.url", "https://sonarcloud.io"
-		property "sonar.login", "2de1a5c02494f70ae448f842ff91143b47f39426"
+		property "sonar.token", "2de1a5c02494f70ae448f842ff91143b47f39426"
 	}
 }
