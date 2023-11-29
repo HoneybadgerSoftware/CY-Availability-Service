@@ -39,5 +39,10 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@latest
+        with:
+          sonar: ${{ secrets.SONAR_TOKEN }}
+
       - name: Set execute permissions on gradlew
         run: chmod +x ./gradlew
