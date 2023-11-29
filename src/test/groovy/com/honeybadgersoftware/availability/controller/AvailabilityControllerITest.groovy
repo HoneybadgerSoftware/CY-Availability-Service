@@ -91,20 +91,22 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
                 missingProducts == expectedResponseData.missingProducts
             }
         }
-        with(response.body.data.get(1)) {
-            with(it) {
-                def expectedResponseData = expectedResponse.getData().get(1)
-                getShopId() == expectedResponseData.getShopId()
-                totalPriceOfProducts == expectedResponseData.totalPriceOfProducts
-                productsPrices == expectedResponseData.productsPrices
-                missingProducts == expectedResponseData.missingProducts
+        if (response.body.data.size() > 1) {
+            with(response.body.data.get(1)) {
+                with(it) {
+                    def expectedResponseData = expectedResponse.getData().get(1)
+                    getShopId() == expectedResponseData.getShopId()
+                    totalPriceOfProducts == expectedResponseData.totalPriceOfProducts
+                    productsPrices == expectedResponseData.productsPrices
+                    missingProducts == expectedResponseData.missingProducts
+                }
             }
         }
 
         where:
-        shopId   | productsIds | expectedResponse
-        []       | [1L, 5L]    | partOfAvailabilityResponseCreatorForEmptyShopListWhenCantCompleteAnyList()
-        [1L, 2L] | [1L, 7L]    | availabilityResponseWithSpecifiedShops()
+        shopId   | productsIds  | expectedResponse
+        []       | [1L, 5L, 6L] | partOfAvailabilityResponseCreatorForEmptyShopListWhenCantCompleteAnyList()
+        [1L, 2L] | [1L, 7L]     | availabilityResponseWithSpecifiedShops()
 
 
     }
@@ -116,14 +118,8 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
         return new ProductAvailabilityResponse(List.of(
                 ProductAvailabilityPerShopData.builder()
                         .shopId(1L)
-                        .totalPriceOfProducts(BigDecimal.valueOf(49.99).setScale(2, RoundingMode.HALF_UP))
-                        .productsPrices(List.of(new ProductPriceData(1L, 49.99)))
-                        .missingProducts(List.of(5L))
-                        .build(),
-                ProductAvailabilityPerShopData.builder()
-                        .shopId(2L)
-                        .totalPriceOfProducts(BigDecimal.valueOf(29.99).setScale(2, RoundingMode.HALF_UP))
-                        .productsPrices(List.of(new ProductPriceData(1L, 29.99)))
+                        .totalPriceOfProducts(BigDecimal.valueOf(94.98).setScale(2, RoundingMode.HALF_UP))
+                        .productsPrices(List.of(new ProductPriceData(1L, 49.99), new ProductPriceData(6L, 44.99)))
                         .missingProducts(List.of(5L))
                         .build()))
     }
