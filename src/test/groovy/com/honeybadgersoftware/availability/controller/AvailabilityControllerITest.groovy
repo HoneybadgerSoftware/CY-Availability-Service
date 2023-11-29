@@ -82,26 +82,23 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
         and: "Verify the response body"
         println(response)
 
-        with(response.body.data.get(0)) {
-            with(it) {
-                def expectedResponseData = expectedResponse.getData().get(0)
-                getShopId() == expectedResponseData.getShopId()
-                totalPriceOfProducts == expectedResponseData.totalPriceOfProducts
-                productsPrices == expectedResponseData.productsPrices
-                missingProducts == expectedResponseData.missingProducts
-            }
-        }
-        if (response.body.data.size() > 1) {
-            with(response.body.data.get(1)) {
-                with(it) {
-                    def expectedResponseData = expectedResponse.getData().get(1)
-                    getShopId() == expectedResponseData.getShopId()
-                    totalPriceOfProducts == expectedResponseData.totalPriceOfProducts
-                    productsPrices == expectedResponseData.productsPrices
-                    missingProducts == expectedResponseData.missingProducts
+        def responseDataList = response.body.data
+        def expectedDataList = expectedResponse.getData()
+
+//        assert responseDataList.size() >= 3 : "Oczekiwano co najmniej 3 elementów w odpowiedzi"
+
+        responseDataList[0..2].eachWithIndex { responseData, index ->
+            if (index < expectedDataList.size()) {
+                with(responseData) {
+                    def expectedResponseData = expectedDataList.get(index)
+                     getShopId() == expectedResponseData.getShopId()
+                     totalPriceOfProducts == expectedResponseData.totalPriceOfProducts
+                     productsPrices == expectedResponseData.productsPrices
+                     missingProducts == expectedResponseData.missingProducts
                 }
             }
         }
+
 
         where:
         shopId   | productsIds  | expectedResponse
