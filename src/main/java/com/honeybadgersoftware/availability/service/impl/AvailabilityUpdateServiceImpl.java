@@ -5,7 +5,7 @@ import com.honeybadgersoftware.availability.model.dto.ProductPriceData;
 import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
 import com.honeybadgersoftware.availability.model.entity.AvailabilityEntity;
 import com.honeybadgersoftware.availability.repository.AvailabilityRepository;
-import com.honeybadgersoftware.availability.service.AvailabilityService;
+import com.honeybadgersoftware.availability.service.AvailabilityUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UpdateAvailabilityServiceImpl implements AvailabilityService {
+public class AvailabilityUpdateServiceImpl implements AvailabilityUpdateService {
 
     private final AvailabilityRepository availabilityRepository;
     private final AvailabilityEntityDecorator availabilityEntityDecorator;

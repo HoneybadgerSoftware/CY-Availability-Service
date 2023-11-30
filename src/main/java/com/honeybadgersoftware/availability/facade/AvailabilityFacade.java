@@ -2,10 +2,11 @@ package com.honeybadgersoftware.availability.facade;
 
 import com.honeybadgersoftware.availability.api.product.client.ProductServiceApi;
 import com.honeybadgersoftware.availability.model.request.CheckAvailabilityRequest;
+import com.honeybadgersoftware.availability.model.request.GetRandomProductsByShops;
 import com.honeybadgersoftware.availability.model.response.ProductAvailabilityResponse;
 import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
 import com.honeybadgersoftware.availability.model.request.UpdateProductsAveragePriceRequest;
-import com.honeybadgersoftware.availability.service.AvailabilityService;
+import com.honeybadgersoftware.availability.service.AvailabilityUpdateService;
 import com.honeybadgersoftware.availability.service.PriceService;
 import com.honeybadgersoftware.availability.service.VerifyService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AvailabilityFacade {
 
-    private final AvailabilityService availabilityService;
+    private final AvailabilityUpdateService availabilityUpdateService;
     private final PriceService priceService;
     private final VerifyService verifyService;
     private final ProductServiceApi productServiceApi;
@@ -26,7 +27,7 @@ public class AvailabilityFacade {
         productServiceApi.updateExistingProductsAveragePrice(
                 UpdateProductsAveragePriceRequest.builder()
                         .data(priceService.prepareProductsAveragePriceData(
-                                availabilityService.updateAvailability(updateAvailabilityRequest)))
+                                availabilityUpdateService.updateAvailability(updateAvailabilityRequest)))
                         .build());
     }
 
@@ -39,7 +40,9 @@ public class AvailabilityFacade {
         }
         return verifyService.verifyAvailabilityForSpecificShops(
                 productIds, shopIds);
-
     }
 
+    public void getRandomProductsByShops(GetRandomProductsByShops getRandomProductsByShops) {
+
+    }
 }
