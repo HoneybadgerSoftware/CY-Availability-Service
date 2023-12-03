@@ -30,7 +30,7 @@ public class AvailabilityController {
     @GetMapping("/check/random")
     ResponseEntity<Void> getRandomProductsByLocation(@RequestBody GetRandomProductsByShops getRandomProductsByShops){
         facade.getRandomProductsByShops(getRandomProductsByShops);
-        return null;
+        return ResponseEntity.ok().build();
     }
 
 }

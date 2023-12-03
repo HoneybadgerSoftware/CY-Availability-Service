@@ -5,6 +5,7 @@ import com.honeybadgersoftware.availability.data.ProductDataCreator
 import com.honeybadgersoftware.availability.model.dto.ProductAvailabilityPerShopData
 import com.honeybadgersoftware.availability.model.dto.ProductPriceData
 import com.honeybadgersoftware.availability.model.request.CheckAvailabilityRequest
+import com.honeybadgersoftware.availability.model.request.GetRandomProductsByShops
 import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest
 import com.honeybadgersoftware.availability.model.response.ProductAvailabilityResponse
 import com.honeybadgersoftware.availability.repository.AvailabilityRepository
@@ -105,8 +106,33 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
         shopId   | productsIds  | expectedResponse
         []       | [1L, 5L, 6L] | partOfAvailabilityResponseCreatorForEmptyShopListWhenCantCompleteAnyList()
         [1L, 2L] | [1L, 7L]     | availabilityResponseWithSpecifiedShops()
+    }
 
 
+    def 'should return response with random products ids per shop'(){
+
+        given:
+        def shops = new GetRandomProductsByShops([1L, 2L])
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        HttpEntity<GetRandomProductsByShops> requestEntity = new HttpEntity<>(shops, headers)
+
+        and:
+        wireMock.stubFor(post(urlEqualTo("/products/display"))
+                .withRequestBody(equalToJson(productDataCreator.randomProductIdsJson))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")))
+
+        when:
+        ResponseEntity<Void> response = restTemplate.exchange(
+                addressToUseForTests + "/availability/check/random",
+                HttpMethod.GET,
+                requestEntity,
+                Void.class)
+
+        then:
+        response.getStatusCode() == HttpStatus.OK
     }
 
     static def partOfAvailabilityResponseCreatorForEmptyShopListWhenCantCompleteAnyList() {
