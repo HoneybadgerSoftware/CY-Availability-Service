@@ -2,8 +2,8 @@ package com.honeybadgersoftware.availability.service.impl;
 
 import com.honeybadgersoftware.availability.component.decorator.AvailabilityEntityDecorator;
 import com.honeybadgersoftware.availability.model.dto.ProductPriceData;
-import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
 import com.honeybadgersoftware.availability.model.entity.AvailabilityEntity;
+import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
 import com.honeybadgersoftware.availability.repository.AvailabilityRepository;
 import com.honeybadgersoftware.availability.service.AvailabilityUpdateService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class AvailabilityUpdateServiceImpl implements AvailabilityUpdateService 
 
     private List<Long> updateAvailabilityDataForExistingProducts(List<ProductPriceData> data, Long shopId) {
         return updateAvailabilityDatabase(data, shopId).stream()
-                .map(AvailabilityEntity::getProductId).collect(Collectors.toList());
+                .map(AvailabilityEntity::getProductId).toList();
     }
 
     private List<AvailabilityEntity> updateAvailabilityDatabase(List<ProductPriceData> productPriceData, Long shopId) {
@@ -46,7 +45,7 @@ public class AvailabilityUpdateServiceImpl implements AvailabilityUpdateService 
                 shopId);
 
         List<AvailabilityEntity> updatedEntities = existingEntities.stream()
-                .peek(existingEntity -> productPriceData.stream()
+                .peek(existingEntity -> productPriceData.stream()     //NOSONAR
                         .filter(updateData -> matchEntityWithAvailabilityData.test(updateData, existingEntity))
                         .findFirst().ifPresent(
                                 correspondingUpdateData ->
