@@ -26,6 +26,8 @@ public interface AvailabilityRepository extends JpaRepository<AvailabilityEntity
     List<AvailabilityEntity> findAllByProductIdsAndShopIds(
             @Param("productIds") Collection<Long> productIds, @Param("shopIds") Collection<Long> shopIds);
 
+    //not the best way, to refactor in thr future, probably using pageable and filtering of distinct ids on service side as
+    //distinct filtering on jpa lvl with pagination is not optimal, for now lets just move with development process
     @Query("SELECT DISTINCT e.productId AS id FROM AvailabilityEntity e WHERE e.shopId IN :shopIds")
     List<Long> findRandomProductsIdsByShopIds(@Param("shopIds") List<Long> shopIds, Pageable pageable);
 
