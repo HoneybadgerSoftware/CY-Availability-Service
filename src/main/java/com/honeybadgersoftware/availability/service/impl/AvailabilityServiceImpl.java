@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +25,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         if (nextInt <= 0) {
             return availabilityRepository.findRandomProductsIdsByShopIds(shopIds, PageRequest.of(0, PAGE_SIZE));
         }
-        int offset = new Random().nextInt(nextInt);
+        int offset = new SecureRandom().nextInt(nextInt);
 
         return availabilityRepository.findRandomProductsIdsByShopIds(shopIds, PageRequest.of(offset, PAGE_SIZE));
     }
