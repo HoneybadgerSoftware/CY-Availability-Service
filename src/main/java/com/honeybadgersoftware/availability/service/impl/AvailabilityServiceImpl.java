@@ -21,11 +21,11 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public List<Long> getRandomProductsByShop(List<Long> shopIds) {
 
         int tableSize = (int) availabilityRepository.count();
-        int nextInt = tableSize - PAGE_SIZE + 1;
-        if (nextInt <= 0) {
+        int seed = tableSize - PAGE_SIZE + 1;
+        if (seed <= 0) {
             return availabilityRepository.findRandomProductsIdsByShopIds(shopIds, PageRequest.of(0, PAGE_SIZE));
         }
-        int offset = new SecureRandom().nextInt(nextInt);
+        int offset = new SecureRandom().nextInt(seed);
 
         return availabilityRepository.findRandomProductsIdsByShopIds(shopIds, PageRequest.of(offset, PAGE_SIZE));
     }
