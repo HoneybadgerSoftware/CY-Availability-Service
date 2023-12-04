@@ -1,7 +1,7 @@
 package com.honeybadgersoftware.availability.facade;
 
 import com.honeybadgersoftware.availability.api.product.client.ProductServiceApi;
-import com.honeybadgersoftware.availability.model.dto.ProductIndexesPage;
+import com.honeybadgersoftware.availability.model.request.ProductIndexesRequest;
 import com.honeybadgersoftware.availability.model.request.CheckAvailabilityRequest;
 import com.honeybadgersoftware.availability.model.request.GetRandomProductsByShops;
 import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
@@ -46,7 +46,7 @@ public class AvailabilityFacade {
     }
 
     public void getRandomProductsByShops(GetRandomProductsByShops getRandomProductsByShops) {
-        productServiceApi.productsAvailabilitySynchronization(ProductIndexesPage.builder()
+        productServiceApi.productsAvailabilitySynchronization(ProductIndexesRequest.builder()
                 .data(availabilityService.getRandomProductsByShop(getRandomProductsByShops.getShopIds()))
                 .build());
     }

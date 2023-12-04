@@ -1,4 +1,4 @@
-package com.honeybadgersoftware.availability.model.dto;
+package com.honeybadgersoftware.availability.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductIndexesPage {
+public class ProductIndexesRequest {
     private List<Long> data;
 }
