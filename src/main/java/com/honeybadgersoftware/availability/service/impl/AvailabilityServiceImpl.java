@@ -1,10 +1,8 @@
 package com.honeybadgersoftware.availability.service.impl;
 
-import com.honeybadgersoftware.availability.model.entity.ProductIdProjection;
 import com.honeybadgersoftware.availability.repository.AvailabilityRepository;
 import com.honeybadgersoftware.availability.service.AvailabilityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +18,14 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
 
     @Override
-    public Page<ProductIdProjection> getRandomProductsByShop(List<Long> shopIds) {
+    public List<Long> getRandomProductsByShop(List<Long> shopIds) {
 
         int tableSize = (int) availabilityRepository.count();
-        int offset = new Random().nextInt(tableSize - PAGE_SIZE + 1);
+        int nextInt = tableSize - PAGE_SIZE + 1;
+        if (nextInt <= 0) {
+            return availabilityRepository.findRandomProductsIdsByShopIds(shopIds, PageRequest.of(0, PAGE_SIZE));
+        }
+        int offset = new Random().nextInt(nextInt);
 
         return availabilityRepository.findRandomProductsIdsByShopIds(shopIds, PageRequest.of(offset, PAGE_SIZE));
     }

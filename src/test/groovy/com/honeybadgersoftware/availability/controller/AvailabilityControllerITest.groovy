@@ -2,6 +2,7 @@ package com.honeybadgersoftware.availability.controller
 
 import com.honeybadgersoftware.availability.base.BaseIntegrationTest
 import com.honeybadgersoftware.availability.data.ProductDataCreator
+import com.honeybadgersoftware.availability.data.SimplePage
 import com.honeybadgersoftware.availability.model.dto.ProductAvailabilityPerShopData
 import com.honeybadgersoftware.availability.model.dto.ProductPriceData
 import com.honeybadgersoftware.availability.model.request.CheckAvailabilityRequest
@@ -119,7 +120,7 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
 
         and:
         wireMock.stubFor(post(urlEqualTo("/products/display"))
-                .withRequestBody(equalToJson(productDataCreator.randomProductIdsJson))
+                .withRequestBody(equalToJson(SimplePage.json))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")))

@@ -1,9 +1,8 @@
 package com.honeybadgersoftware.availability.api.product.client;
 
-import com.honeybadgersoftware.availability.model.entity.ProductIdProjection;
+import com.honeybadgersoftware.availability.model.dto.ProductIndexesPage;
 import com.honeybadgersoftware.availability.model.request.UpdateProductsAveragePriceRequest;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,5 +17,5 @@ public interface ProductServiceApi {
 
     @PostMapping("/display")
     ResponseEntity<Void> productsAvailabilitySynchronization(
-            @RequestBody Page<ProductIdProjection> productIds);
+            @RequestBody ProductIndexesPage productIds);
 }
