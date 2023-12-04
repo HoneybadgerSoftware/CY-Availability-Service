@@ -2,8 +2,9 @@ package com.honeybadgersoftware.availability.controller;
 
 import com.honeybadgersoftware.availability.facade.AvailabilityFacade;
 import com.honeybadgersoftware.availability.model.request.CheckAvailabilityRequest;
-import com.honeybadgersoftware.availability.model.response.ProductAvailabilityResponse;
+import com.honeybadgersoftware.availability.model.request.GetRandomProductsByShops;
 import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
+import com.honeybadgersoftware.availability.model.response.ProductAvailabilityResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,12 @@ public class AvailabilityController {
     @GetMapping("/check")
     ResponseEntity<ProductAvailabilityResponse> getProductsAvailability(@RequestBody CheckAvailabilityRequest checkAvailabilityRequest) {
         return ResponseEntity.ok(facade.getProductsAvailability(checkAvailabilityRequest));
+    }
+
+    @GetMapping("/check/random")
+    ResponseEntity<Void> getRandomProductsByLocation(@RequestBody GetRandomProductsByShops getRandomProductsByShops) {
+        facade.getRandomProductsByShops(getRandomProductsByShops);
+        return ResponseEntity.ok().build();
     }
 
 }

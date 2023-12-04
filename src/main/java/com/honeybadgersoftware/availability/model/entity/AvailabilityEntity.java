@@ -2,6 +2,7 @@ package com.honeybadgersoftware.availability.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.math.BigDecimal;
 
@@ -13,6 +14,8 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Table(name = "availability")
 @ToString
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AvailabilityEntity {
 
     @Id

@@ -6,12 +6,15 @@ import com.honeybadgersoftware.availability.model.request.UpdateProductsAverageP
 
 import java.math.RoundingMode
 
-
 class ProductDataCreator {
 
-    ProductAveragePriceData productAveragePrice = new ProductAveragePriceData(id: 9L, averagePrice: new BigDecimal( 14.99).setScale(2, RoundingMode.HALF_UP))
+    Gson gson = new Gson()
+
+
+    ProductAveragePriceData productAveragePrice =
+            new ProductAveragePriceData(id: 9L, averagePrice: new BigDecimal(14.99).setScale(2, RoundingMode.HALF_UP))
     UpdateProductsAveragePriceRequest updateRequest = new UpdateProductsAveragePriceRequest(data: [productAveragePrice])
 
-    Gson gson = new Gson()
     String updateProductsPricesJson = gson.toJson(updateRequest)
+
 }
