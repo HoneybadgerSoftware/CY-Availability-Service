@@ -53,7 +53,7 @@ public class AvailabilityUpdateServiceImpl implements AvailabilityUpdateService 
                                         availabilityEntityDecorator.decorate(
                                                 correspondingUpdateData.getPrice(),
                                                 existingEntity)))
-                .collect(Collectors.toList());
+                .toList();
 
         return availabilityRepository.saveAll(updatedEntities);
     }
