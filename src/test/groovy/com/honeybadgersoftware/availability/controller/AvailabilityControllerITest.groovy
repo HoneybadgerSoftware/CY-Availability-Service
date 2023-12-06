@@ -9,6 +9,7 @@ import com.honeybadgersoftware.availability.model.request.CheckAvailabilityReque
 import com.honeybadgersoftware.availability.model.request.GetRandomProductsByShops
 import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest
 import com.honeybadgersoftware.availability.model.response.ProductAvailabilityResponse
+import com.honeybadgersoftware.availability.model.response.ProductIdsResponse
 import com.honeybadgersoftware.availability.repository.AvailabilityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.*
@@ -118,22 +119,16 @@ class AvailabilityControllerITest extends BaseIntegrationTest {
         headers.setContentType(MediaType.APPLICATION_JSON)
         HttpEntity<GetRandomProductsByShops> requestEntity = new HttpEntity<>(shops, headers)
 
-        and:
-        wireMock.stubFor(post(urlEqualTo("/products/display"))
-                .withRequestBody(equalToJson(SimplePage.json))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")))
-
         when:
-        ResponseEntity<Void> response = restTemplate.exchange(
+        ResponseEntity<ProductIdsResponse> response = restTemplate.exchange(
                 addressToUseForTests + "/availability/check/random",
-                HttpMethod.GET,
+                HttpMethod.POST,
                 requestEntity,
-                Void.class)
+                ProductIdsResponse.class)
 
         then:
         response.getStatusCode() == HttpStatus.OK
+        response.getBody().getData() == [1L, 6L, 7L, 9L, 10L]
     }
 
     static def partOfAvailabilityResponseCreatorForEmptyShopListWhenCantCompleteAnyList() {
