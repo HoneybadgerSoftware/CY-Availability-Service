@@ -4,3 +4,8 @@ databaseChangeLog:
       author: jakub.kolacz
       file: changeset/0001_create_availability_table.yaml
       relativeToChangelogFile: true
+  - include:
+      id: 2
+      author: jakub.kolacz
+      file: changeset/0002_create_unique_constraint.yaml
+      relativeToChangelogFile: true

@@ -1,6 +1,7 @@
 package com.honeybadgersoftware.availability.service.impl;
 
 import com.honeybadgersoftware.availability.component.decorator.AvailabilityEntityDecorator;
+import com.honeybadgersoftware.availability.component.factory.AvailabilityEntityFactory;
 import com.honeybadgersoftware.availability.model.dto.ProductPriceData;
 import com.honeybadgersoftware.availability.model.entity.AvailabilityEntity;
 import com.honeybadgersoftware.availability.model.request.UpdateAvailabilityRequest;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 @Service
@@ -18,6 +20,7 @@ public class AvailabilityUpdateServiceImpl implements AvailabilityUpdateService 
 
     private final AvailabilityRepository availabilityRepository;
     private final AvailabilityEntityDecorator availabilityEntityDecorator;
+    private final AvailabilityEntityFactory availabilityEntityFactory;
 
     @Override
     public List<Long> updateAvailability(UpdateAvailabilityRequest updateAvailabilityRequest) {
@@ -27,11 +30,22 @@ public class AvailabilityUpdateServiceImpl implements AvailabilityUpdateService 
         Long shopId = updateAvailabilityRequest.getShopId();
 
         if (newProductsData.isEmpty()) {
+            List<Long> longs = updateAvailabilityDataForExistingProducts(existingProductsData, shopId);
+            System.out.println("Dupa" + longs);
             return updateAvailabilityDataForExistingProducts(existingProductsData, shopId);
         }
-        updateAvailabilityDatabase(newProductsData, shopId);
+        addNewProducts(newProductsData, shopId);
+        List<Long> longs = updateAvailabilityDataForExistingProducts(existingProductsData, shopId);
+
+        System.out.println("Dupa" + longs);
         return updateAvailabilityDataForExistingProducts(existingProductsData, shopId);
     }
+
+    private void addNewProducts(List<ProductPriceData> newProductsData, Long shopId) {
+        availabilityRepository.saveAll(availabilityEntityFactory.map(newProductsData, shopId));
+    }
+
+    //sprawdz na existing products czy istnieje z takim shop id, to ci powoduje problem
 
     private List<Long> updateAvailabilityDataForExistingProducts(List<ProductPriceData> data, Long shopId) {
         return updateAvailabilityDatabase(data, shopId).stream()
@@ -40,21 +54,25 @@ public class AvailabilityUpdateServiceImpl implements AvailabilityUpdateService 
 
     private List<AvailabilityEntity> updateAvailabilityDatabase(List<ProductPriceData> productPriceData, Long shopId) {
 
+        System.out.println("Dupa1" + productPriceData);
+
         List<AvailabilityEntity> existingEntities = availabilityRepository.findAllByProductIdAndShopId(
                 productPriceData.stream().map(ProductPriceData::getProductId).toList(),
                 shopId);
 
-        List<AvailabilityEntity> updatedEntities = existingEntities.stream()
-                .peek(existingEntity -> productPriceData.stream()     //NOSONAR
-                        .filter(updateData -> matchEntityWithAvailabilityData.test(updateData, existingEntity))
-                        .findFirst().ifPresent(
-                                correspondingUpdateData ->
-                                        availabilityEntityDecorator.decorate(
-                                                correspondingUpdateData.getPrice(),
-                                                existingEntity)))
-                .toList();
+        System.out.println(existingEntities);
 
-        return availabilityRepository.saveAll(updatedEntities);
+        existingEntities.forEach(existingEntity -> {
+            Optional<ProductPriceData> updateDataOptional = productPriceData.stream()
+                    .filter(updateData -> matchEntityWithAvailabilityData.test(updateData, existingEntity))
+                    .findFirst();
+
+            updateDataOptional.ifPresent(updateData ->
+                    availabilityEntityDecorator.decorate(updateData.getPrice(), existingEntity));
+            existingEntity.setId(existingEntity.getId());
+        });
+
+        return availabilityRepository.saveAll(existingEntities);
     }
 
     private final BiPredicate<ProductPriceData, AvailabilityEntity> matchEntityWithAvailabilityData =

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-unique-constraint-to-availability
+      author: Jakub.Kolacz
+      changes:
+        - createIndex:
+            tableName: availability
+            indexName: id_availability_entity_unique_product_shop
+            unique: true
+            columns:
+              - column:
+                  name: product_id
+              - column:
+                  name: shop_id

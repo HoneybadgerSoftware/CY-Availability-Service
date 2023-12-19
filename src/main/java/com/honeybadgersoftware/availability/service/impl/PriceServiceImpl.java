@@ -26,12 +26,19 @@ public class PriceServiceImpl implements PriceService {
     }
 
     private List<ProductAveragePriceData> createProductsAveragePrices(Map<Long, List<AvailabilityEntity>> products) {
-        return products.entrySet()
+
+        System.out.println(products);
+
+        List<ProductAveragePriceData> productAveragePriceData = products.entrySet()
                 .stream()
                 .map(entry ->
                         new ProductAveragePriceData(entry.getKey(), calculateProductAveragePrice(entry.getValue()))
                 )
                 .toList();
+
+        System.out.println(productAveragePriceData);
+
+        return productAveragePriceData;
     }
 
     private Map<Long, List<AvailabilityEntity>> groupProductsByProductId(List<Long> productIds) {

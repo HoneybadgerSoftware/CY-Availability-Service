@@ -12,7 +12,7 @@ class ProductDataCreator {
 
 
     ProductAveragePriceData productAveragePrice =
-            new ProductAveragePriceData(id: 9L, averagePrice: new BigDecimal(14.99).setScale(2, RoundingMode.HALF_UP))
+            new ProductAveragePriceData(setProductId: 9L, averagePrice: new BigDecimal(14.99).setScale(2, RoundingMode.HALF_UP))
     UpdateProductsAveragePriceRequest updateRequest = new UpdateProductsAveragePriceRequest(data: [productAveragePrice])
 
     String updateProductsPricesJson = gson.toJson(updateRequest)

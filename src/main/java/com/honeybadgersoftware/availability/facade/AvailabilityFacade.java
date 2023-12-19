@@ -28,10 +28,12 @@ public class AvailabilityFacade {
     private final ProductServiceApi productServiceApi;
 
     public void synchronizeProductsAvailabilityData(UpdateAvailabilityRequest updateAvailabilityRequest) {
+
+        List<Long> updateAvailabilityIds = availabilityUpdateService.updateAvailability(updateAvailabilityRequest);
         productServiceApi.updateExistingProductsAveragePrice(
                 UpdateProductsAveragePriceRequest.builder()
                         .data(priceService.prepareProductsAveragePriceData(
-                                availabilityUpdateService.updateAvailability(updateAvailabilityRequest)))
+                                updateAvailabilityIds))
                         .build());
     }
 
